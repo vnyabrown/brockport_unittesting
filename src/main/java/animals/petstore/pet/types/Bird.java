@@ -42,7 +42,7 @@ public class Bird extends Pet implements PetImpl {
 
     public Bird(AnimalType animalType, Skin skinType, Gender gender, Breed breed, BigDecimal cost)
     {
-        this(animalType, skinType, gender, breed, 0);
+        this(animalType, skinType, gender, breed, cost,0);
     } // end of Bird constructor (cost)
 
     /**
@@ -111,12 +111,27 @@ public class Bird extends Pet implements PetImpl {
     /**
      * {@inheritDoc}
      */
-    // Need to add getBreed and typeOfPet
+    // Functions to return bird attributes
+    public Breed getBreed() {
+        return this.breed;
+    }
+    public String typeOfPet() {
+        return "The type of pet is " + petType + "!";
+    }
     public AnimalType getAnimalType()
     {
         return super.animalType;
     } // end of getAnimalType
 
-
+    // Output bird attributes as a string
+    @Override
+    public String toString() {
+        return super.toString() +
+                "The bird is " + this.animalType + "!\n" +
+                "The bird breed is " + this.getBreed() + "!\n" +
+                this.birdHypoallergenic() + "!\n" +
+                this.speak() + "\n" +
+                this.numberOfLegs();
+    }
 
 } // end of Bird class
