@@ -1,11 +1,14 @@
 package tests;
 
 import animals.AnimalType;
+import animals.petstore.pet.Pet;
 import animals.petstore.pet.attributes.Breed;
 import animals.petstore.pet.attributes.Gender;
 import animals.petstore.pet.attributes.Skin;
 import animals.petstore.pet.types.Cat;
 import animals.petstore.pet.types.Dog;
+import animals.petstore.pet.types.Bird;
+import animals.petstore.pet.types.PetImpl;
 import animals.petstore.store.DuplicatePetStoreRecordException;
 import animals.petstore.store.PetNotFoundSaleException;
 import animals.petstore.store.PetStore;
@@ -39,7 +42,7 @@ public class PetStoreTest
     @DisplayName("Inventory Count Test")
     public void validateInventory()
     {
-        assertEquals(5, petStore.getPetsForSale().size(),"Inventory counts are off!");
+        assertEquals(6, petStore.getPetsForSale().size(),"Inventory counts are off!");
     }
 
     @Test
@@ -90,6 +93,22 @@ public class PetStoreTest
         assertEquals(inventorySize, petStore.getPetsForSale().size(), "Expected inventory does not match actual");
         assertEquals(sphynx.getPetStoreId(), removedItem.getPetStoreId(), "The cat items are identical");
     }
+
+    @Test
+    @DisplayName("Cardinal Record Not Found Exception Test")
+    public void petNotFoundTest() throws PetNotFoundSaleException, DuplicatePetStoreRecordException {
+        //soldPetItem method in petstore
+        //throws PetNotFoundSaleException if the pet is not in any store aka petStoreid == 0
+        petStore.addPetInventoryItem(new Bird(AnimalType.DOMESTIC, Skin.FEATHERS, Gender.FEMALE, Breed.CARDINAL,
+                new BigDecimal("220.00"), 0));
+        Bird cardinal = new Bird(AnimalType.DOMESTIC, Skin.FEATHERS, Gender.FEMALE, Breed.CARDINAL,
+                new BigDecimal("220.00"), 0);
+
+        String expectedMessage = "The Pet is not part of the pet store!!";
+        Exception exception = assertThrows(PetNotFoundSaleException.class, () ->{
+            petStore.soldPetItem(cardinal);});
+        assertEquals(expectedMessage, exception.getMessage(), "RecordNotFoundExceptionTest was NOT encountered!");
+    } // end of petNotFoundTest
 
     /**
      * Limitations to test factory as it does not instantiate before all
